@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pookie Percentage Calculator</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    text-align:center;
+}
+
+header{
+    padding:20px;
+    font-size:26px;
+    font-weight:bold;
+    background: rgba(255,255,255,0.05);
+}
+
+.container{
+    width:350px;
+    margin:40px auto;
+    padding:25px;
+    background: rgba(255,255,255,0.05);
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+input, button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+
+input{
+    background:#f1f5f9;
+}
+
+button{
+    background: linear-gradient(45deg,#6366f1,#ec4899);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.hidden{
+    display:none;
+}
+
+table{
+    width:100%;
+    margin-top:15px;
+    border-collapse:collapse;
+}
+
+th, td{
+    padding:10px;
+}
+
+th{
+    background:#6366f1;
+}
+
+footer{
+    margin-top:20px;
+    font-size:13px;
+    color:#cbd5f5;
+}
+</style>
+</head>
+
+<body>
+
+<header>Pookie Percentage Calculator</header>
+
+<div class="container">
+
+    <input type="text" id="yourName" placeholder="Your Name">
+    <input type="text" id="crushName" placeholder="Crush Name">
+
+    <button onclick="calculate()">Check Pookie %</button>
+
+    <h2 id="result"></h2>
+
+    <!-- SECRET PANEL -->
+    <div id="secretPanel" class="hidden">
+        <h3>💖 Pookie Records</h3>
+        <table id="table">
+            <tr>
+                <th>Your Name</th>
+                <th>Crush</th>
+                <th>%</th>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<footer>Website made by Nakshatra ✨</footer>
+
+<script>
+const secretCode = "hasbulla";
+
+// load saved data when page opens
+window.onload = loadData;
+
+function calculate(){
+    let your = document.getElementById("yourName").value.trim();
+    let crush = document.getElementById("crushName").value.trim();
+
+    // secret unlock
+    if(your.toLowerCase() === secretCode || crush.toLowerCase() === secretCode){
+        document.getElementById("secretPanel").style.display="block";
+        loadData();
+        document.getElementById("result").innerHTML="";
+        return;
+    }
+
+    if(your==="" || crush===""){
+        document.getElementById("result").innerHTML="Enter both names";
+        return;
+    }
+
+    let percent = Math.floor(Math.random()*41) + 60; // 60–100
+    document.getElementById("result").innerHTML = percent + "% 💖";
+
+    saveData(your, crush, percent);
+
+    document.getElementById("yourName").value="";
+    document.getElementById("crushName").value="";
+}
+
+function saveData(your, crush, percent){
+    let records = JSON.parse(localStorage.getItem("pookieData")) || [];
+
+    // prevent duplicates
+    let exists = records.some(r => r.your===your && r.crush===crush);
+    if(!exists){
+        records.push({your, crush, percent});
+        localStorage.setItem("pookieData", JSON.stringify(records));
+    }
+}
+
+function loadData(){
+    let records = JSON.parse(localStorage.getItem("pookieData")) || [];
+    let table = document.getElementById("table");
+
+    // clear table before loading
+    table.innerHTML = `
+        <tr>
+            <th>Your Name</th>
+            <th>Crush</th>
+            <th>%</th>
+        </tr>`;
+
+    records.forEach(r => {
+        let row = table.insertRow();
+        row.insertCell(0).innerHTML = r.your;
+        row.insertCell(1).innerHTML = r.crush;
+        row.insertCell(2).innerHTML = r.percent + "%";
+    });
+}
+</script>
+
+</body>
+</html>
